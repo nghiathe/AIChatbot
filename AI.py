@@ -73,8 +73,12 @@ try:
     # Huấn luyện mô hình
     model.fit(np.array(train_x), np.array(train_y), epochs=200, batch_size=8, verbose=1)
 
+    model = tf.keras.models.load_model("chatbot_model.h5")
+    converter = tf.lite.TFLiteConverter.from_keras_model(model)
+    tflite_model = converter.convert()
     # Lưu mô hình và dữ liệu
-    model.save("chatbot_model.h5")
+    with open("chatbot_model.tflite", "wb") as f:
+        f.write(tflite_model)
 
     with open("chatbot_words.json", "w", encoding="utf-8") as file:
         json.dump(words, file)
